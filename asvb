@@ -1,0 +1,15 @@
+local scrip = {}
+local lib=require(game:GetService("ReplicatedStorage").Library)
+local client=require(game:GetService("ReplicatedStorage").Library.Client)
+local function getcoin(Area) local Coins = {} for i,v in next, client.Network.Invoke("Get Coins") do if v.a == Area then Coins[i] = v end end return Coins; end; local function pets() return client.PetCmds.GetEquipped(); end
+function scrip:AttackCoin(id)
+    spawn(function()
+            if workspace.__THINGS.Coins:FindFirstChild(id) then local ps= pets();
+                for _,p in next, ps do
+                    client.Network.Invoke("Join Coin", id, {p.uid})
+                    client.Network.Fire("Farm Coin", id, p.uid)
+                end
+            end
+    end)
+end
+return scrip
