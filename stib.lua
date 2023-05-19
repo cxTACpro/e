@@ -2,6 +2,7 @@ local Signal = {}
 Signal.__index = Signal
 Signal.ClassName = "Signal"
 function Signal.new()
+	print('n')
 	local self = setmetatable({}, Signal)
 	self._bindableEvent = Instance.new("BindableEvent")
 	self._argData = nil
@@ -9,6 +10,7 @@ function Signal.new()
 	return self
 end
 function Signal:Fire(...)
+	print('f')
 	self._argData = {...}
 	self._argCount = select("#", ...)
 	self._bindableEvent:Fire()
@@ -16,6 +18,7 @@ function Signal:Fire(...)
 	self._argCount = nil
 end
 function Signal:Connect(handler)
+	print('c')
 	if not (type(handler) == "function") then
 		error(("connect(%s)"):format(typeof(handler)), 2)
 	end
@@ -24,11 +27,13 @@ function Signal:Connect(handler)
 	end)
 end
 function Signal:Wait()
+	print('w')
 	self._bindableEvent.Event:Wait()
 	assert(self._argData, "Missing arg data, likely due to :TweenSize/Position corrupting threadrefs.")
 	return unpack(self._argData, 1, self._argCount)
 end
 function Signal:Destroy()
+	print('del')
 	if self._bindableEvent then
 		self._bindableEvent:Destroy()
 		self._bindableEvent = nil
